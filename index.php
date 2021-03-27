@@ -33,9 +33,19 @@ echo json_encode($usuarios);
 //echo $usuario;
 
 //CARREGA UM USUÁRIO USANDO O LOGIN E A SENHA
-$usuario = new Usuario();
-$usuario->login("markos","1234");
+//$usuario = new Usuario();
+//$usuario->login("markos","1234");
 
-echo $usuario;
+//echo $usuario;
+
+$aluno = new Usuario("JoSoares","Onzeemeia");
+
+//substituido pelo metodo construtor
+//$aluno->setDeslogin("aluno");
+//$aluno->setDessenha("!@#$");
+
+$aluno->insert();
+
+echo $aluno;
 
 ?>
