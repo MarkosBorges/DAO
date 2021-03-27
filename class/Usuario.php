@@ -38,7 +38,7 @@ class Usuario{
 		$this->dtcadastro = $value;
 	}
 
-
+// $$$$$$$$$$$$$$$$$$$$ LOADBYID $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 	public function loadById($id){
 		$sql = new Sql();
 		$results = $sql->select("SELECT * FROM tb_usuarios WHERE idusuario = :ID", array(":ID"=>$id
@@ -48,32 +48,29 @@ class Usuario{
 		if(count($results) > 0){
 			$row = $results[0];
 
-/*			$this->setIdusuario($row['idusuario']);
+			$this->setIdusuario($row['idusuario']);
 			$this->setDeslogin($row['deslogin']);
 			$this->setDessenha($row['dessenha']);
-			$this->setDtcadastro(new DateTime($row['dtcadastro'])); */
+			$this->setDtcadastro(new DateTime($row['dtcadastro'])); 
 			// Substituido por:	$this->setData($results[0]);
 
 		}
 
 	}
 
-// ============== lista com todos usuarios da tabela
+// ============== LISTAR com todos usuarios da tabela ===================
 
 	public static function getList(){ //traz lista de users //statico pois n precisa instanciar o objeto
 		$sql = new Sql();
 
 		return $sql->select("SELECT * FROM tb_usuarios ORDER BY deslogin;");
-
-
 	}
 
+// ===================== SEARCH ======================
 	public static function search($login){
 		$sql = new Sql();
 		return $sql->select("SELECT * FROM tb_usuarios WHERE deslogin LIKE ? ORDER BY deslogin", array(
 			':SEARCH'=>"%".$login."%"
-
-
 		));
 	}
 
@@ -124,7 +121,37 @@ class Usuario{
 
 	}
 
-// ============ Para receber login e senha 
+// ====================== UPDATE =====================
+
+	public function update($login, $password){
+
+		$this->setDeslogin($login);
+		$this->setDessenha($password);
+
+		$sql = new Sql();
+		$sql->query("UPDATE tb_usuarios SET deslogin = :LOGIN, dessenha = :PASSWORD WHERE idusuario = :ID", array(
+			 ':LOGIN'=>$this->getDeslogin(),
+			 ':PASSWORD'=>$this->getDessenha(),
+			 ':ID'=>$this->getIdusuario()
+		));
+
+	}
+// ####################### DELETE ###############################
+// * Habilitar os $this no loadbyId / Tirar comentátios dos $this
+	public function delete(){
+		$sql = new Sql();
+		$sql->query("DELETE FROM tb_usuarios WHERE idusuario = :ID", array(
+			':ID'=>$this->getIdusuario()
+		));
+
+		$this->setIdusuario(0);
+		$this->setDeslogin("");
+		$this->setDessenha("");
+		$this->setDtcadastro(new DateTime());
+	}
+
+
+// ============ Método construct para receber login e senha 
 	public function __construct($login = "", $password = ""){
 		$this->setDeslogin($login);
 		$this->setDessenha($password);

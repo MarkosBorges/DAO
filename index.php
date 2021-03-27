@@ -38,14 +38,30 @@ echo json_encode($usuarios);
 
 //echo $usuario;
 
-$aluno = new Usuario("JoSoares","Onzeemeia");
+// =========== INSERT
+//$aluno = new Usuario("JoSoares","Onzeemeia");
 
 //substituido pelo metodo construtor
 //$aluno->setDeslogin("aluno");
 //$aluno->setDessenha("!@#$");
 
-$aluno->insert();
+//$aluno->insert();
 
-echo $aluno;
+//echo $aluno;
+
+//============== UPDATE
+/*$usuario = new Usuario();
+$usuario->loadbyId(7);
+
+$usuario->update("Professor", "Girafales");
+echo $usuario;
+*/
+
+// =========== DELETE
+$usuario = new Usuario();
+$usuario->loadbyId(7); // passa o ID do usuário que vai ser deletado
+$usuario->delete();
+
+echo $usuario;
 
 ?>
