@@ -55,6 +55,49 @@ class Usuario{
 
 	}
 
+// ============== lista com todos usuarios da tabela
+
+	public static function getList(){ //traz lista de users //statico pois n precisa instanciar o objeto
+		$sql = new Sql();
+
+		return $sql->select("SELECT * FROM tb_usuarios ORDER BY deslogin;");
+
+
+	}
+
+	public static function search($login){
+		$sql = new Sql();
+		return $sql->select("SELECT * FROM tb_usuarios WHERE deslogin LIKE ? ORDER BY deslogin", array(
+			':SEARCH'=>"%".$login."%"
+
+
+		));
+	}
+
+
+	public static function login($login, $password){ //Obtém os dados do usuário que está autenticado
+		$sql = new Sql();
+		$results = $sql->select("SELECT * FROM tb_usuarios WHERE deslogin = :LOGIN AND dessenha = :PASSWORD", array(
+			":LOGIN"=>$login,
+			":PASSWORD"=>$password
+
+		));
+
+		if(count($results) > 0){
+			$row = $results[0];
+
+			$this->setIdusuario($row['idusuario']);
+			$this->setDeslogin($row['deslogin']);
+			$this->setDessenha($row['dessenha']);
+			$this->setDtcadastro(new DateTime($row['dtcadastro']));
+		}else{
+			
+			throw new Exception("Login e/ ou senha inválidos.", 1);
+		}
+
+	}
+
+
 	public function __toString(){
 
 		return json_encode(array(
