@@ -7,6 +7,7 @@ class Usuario{
 	private $dessenha;
 	private $dtcadastro;
 
+//########## Gets e Sets dos atributos privates #############
 	public function getIdusuario(){
 		return $this->idusuario;
 	}
@@ -37,74 +38,71 @@ class Usuario{
 	public function setDtcadastro($value){
 		$this->dtcadastro = $value;
 	}
-
+// ################### FIM Gets e Sets #####################
 // $$$$$$$$$$$$$$$$$$$$ LOADBYID $$$$$$$$$$$$$$$$$$$$$$$$$$$$
 	public function loadById($id){
 		$sql = new Sql();
 		$results = $sql->select("SELECT * FROM tb_usuarios WHERE idusuario = :ID", array(":ID"=>$id
-
 		));
 
 		if(count($results) > 0){
-			$row = $results[0];
+//			$row = $results[0];
 
-			$this->setIdusuario($row['idusuario']);
+			$this->setData($results[0]);
+/*			$this->setIdusuario($row['idusuario']);
 			$this->setDeslogin($row['deslogin']);
 			$this->setDessenha($row['dessenha']);
 			$this->setDtcadastro(new DateTime($row['dtcadastro'])); 
+*/
 			// Substituido por:	$this->setData($results[0]);
-
 		}
-
 	}
 
-// ============== LISTAR com todos usuarios da tabela ===================
+// ============== LISTAR todos usuários da tabela =================== //
 
-	public static function getList(){ //traz lista de users //statico pois n precisa instanciar o objeto
+	public static function getList(){ //traz lista de users //stático pois n precisa instanciar o objeto
 		$sql = new Sql();
 
 		return $sql->select("SELECT * FROM tb_usuarios ORDER BY deslogin;");
 	}
 
-// ===================== SEARCH ======================
+// ===================== SEARCH ====================== //
 	public static function search($login){
 		$sql = new Sql();
-		return $sql->select("SELECT * FROM tb_usuarios WHERE deslogin LIKE ? ORDER BY deslogin", array(
+		return $sql->select("SELECT * FROM tb_usuarios WHERE deslogin LIKE :SEARCH ORDER BY deslogin", array(
 			':SEARCH'=>"%".$login."%"
 		));
 	}
 
-
+// ======================= LOGIN ===================== //
 	public static function login($login, $password){ //Obtém os dados do usuário que está autenticado
 		$sql = new Sql();
 		$results = $sql->select("SELECT * FROM tb_usuarios WHERE deslogin = :LOGIN AND dessenha = :PASSWORD", array(
 			":LOGIN"=>$login,
 			":PASSWORD"=>$password
-
 		));
 
 		if(count($results) > 0){
-			$row = $results[0];
+//			$row = $results[0];
 
 	/*		$this->setIdusuario($row['idusuario']);
 			$this->setDeslogin($row['deslogin']);
 			$this->setDessenha($row['dessenha']);
-			$this->setDtcadastro(new DateTime($row['dtcadastro'])); */
-
+			$this->setDtcadastro(new DateTime($row['dtcadastro']));
+	*/
 			$this->setData($results[0]);
 		}else{
-
-			throw new Exception("Login e/ ou senha inválidos.", 1);
+			throw new Exception("Login e/ou senha inválidos.", 1);
 		}
 
 	}
-
+// ================ setData =================
 	public function setData($data){
 		$this->setIdusuario($data['idusuario']);
 		$this->setDeslogin($data['deslogin']);
 		$this->setDessenha($data['dessenha']);
 		$this->setDtcadastro(new DateTime($data['dtcadastro']));
-
+// ==========================================
 	}
 // ========================== INSERT ===============
 	public function insert(){
@@ -129,17 +127,19 @@ class Usuario{
 		$this->setDessenha($password);
 
 		$sql = new Sql();
+
 		$sql->query("UPDATE tb_usuarios SET deslogin = :LOGIN, dessenha = :PASSWORD WHERE idusuario = :ID", array(
 			 ':LOGIN'=>$this->getDeslogin(),
 			 ':PASSWORD'=>$this->getDessenha(),
 			 ':ID'=>$this->getIdusuario()
 		));
-
 	}
 // ####################### DELETE ###############################
 // * Habilitar os $this no loadbyId / Tirar comentátios dos $this
 	public function delete(){
+		
 		$sql = new Sql();
+		
 		$sql->query("DELETE FROM tb_usuarios WHERE idusuario = :ID", array(
 			':ID'=>$this->getIdusuario()
 		));
@@ -152,13 +152,13 @@ class Usuario{
 
 
 // ============ Método construct para receber login e senha 
-	public function __construct($login = "", $password = ""){
+	public function __construct($login = "", $password = ""){ 
 		$this->setDeslogin($login);
 		$this->setDessenha($password);
 	}
 // =================
 
-	public function __toString(){
+	public function __toString(){ // dar echo no json com os dados do atributos
 
 		return json_encode(array(
 			"idusuario"=>$this->getIdusuario(),
